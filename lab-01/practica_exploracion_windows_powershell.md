@@ -21,12 +21,27 @@
 ### Paso 1. Iniciar el registro de evidencia
 
 ```powershell
+# Declara tus datos de identidad primero para usarlos en el nombre del archivo.
+$env:NOMBRE_APELLIDOS = "NOMBRE_APELLIDO1_APELLIDO2"
+$env:NUM_CUENTA = "12345678"
+
+# Resuelve la carpeta del Escritorio de forma portable.
+# En Windows, el nombre real puede cambiar por idioma o perfil; si no existe, usa la carpeta actual.
+$logDir = [Environment]::GetFolderPath('Desktop')
+if (-not $logDir -or -not (Test-Path -LiteralPath $logDir)) {
+    $logDir = $PWD.Path
+}
+
+# Genera la ruta del archivo de evidencia sin asumir una carpeta fija ni idioma.
+$logPath = Join-Path $logDir "practica_SO_$env:NUM_CUENTA.log"
+
 # Inicia la grabación de todo lo que aparezca en la consola (comandos y salidas)
-# y lo guarda en un archivo de texto. Sustituye 12345678 por tu número de cuenta.
-Start-Transcript -Path "$HOME\Desktop\practica_SO_12345678.log"
+Start-Transcript -Path $logPath
 ```
 
 📌 **Qué observar:** PowerShell debe confirmar `Transcript started, output file is ...`. Si no aparece esa línea, el archivo no se está guardando: avisa a tu profesor(a).
+
+> Si tu equipo usa un entorno con el Escritorio en otra ruta o con sincronización en OneDrive, esta versión sigue funcionando porque calcula la ruta real del sistema.
 
 ---
 
@@ -125,11 +140,18 @@ Stop-Transcript
 $env:NOMBRE_APELLIDOS = "NOMBRE_APELLIDO1_APELLIDO2"
 $env:NUM_CUENTA = "12345678"
 
+# Reutiliza la misma ruta del archivo de la sesión anterior sin asumir una carpeta fija.
+$logDir = [Environment]::GetFolderPath('Desktop')
+if (-not $logDir -or -not (Test-Path -LiteralPath $logDir)) {
+    $logDir = $PWD.Path
+}
+$logPath = Join-Path $logDir "practica_SO_$env:NUM_CUENTA.log"
+
 # Reanuda la grabación agregando (Append) al mismo archivo de la Sesión 1
-Start-Transcript -Path "$HOME\Desktop\practica_SO_12345678.log" -Append
+Start-Transcript -Path $logPath -Append
 ```
 
-📌 **Qué observar:** verifica que el mensaje de confirmación aparezca; si escribiste una ruta distinta a la de la Sesión 1, tu evidencia quedará en dos archivos y eso no es lo que se pide.
+📌 **Qué observar:** verifica que el mensaje de confirmación aparezca; si cambiaste la ruta manualmente o usaste otro nombre, tu evidencia quedará en dos archivos y eso no es lo que se pide.
 
 ---
 
@@ -196,10 +218,12 @@ Stop-Transcript
 
 ## Instrucciones de entrega
 
-1. Ve a tu Escritorio y localiza el archivo `practica_SO_TUNUMEROCUENTA.log`.
+1. Busca el archivo `practica_SO_TUNUMEROCUENTA.log` en la carpeta del Escritorio que PowerShell resolvió para ti. Si tu equipo no tiene ese Escritorio disponible, puede estar guardado en la carpeta actual de PowerShell.
 2. Ábrelo con el Bloc de notas y verifica que contenga: tus variables de identidad (Paso 3), y las salidas de los pasos 4 a 12.
 3. Verifica que el archivo **no esté vacío** (0 KB) — si lo está, probablemente olvidaste ejecutar `Start-Transcript` antes de continuar; vuelve a repetir la práctica.
 4. Sube el archivo `.log` a la plataforma del curso en la tarea correspondiente. **No lo renombres** (debe conservar tu número de cuenta en el nombre).
+
+> En equipos con Windows en español, inglés u otra configuración, la carpeta del Escritorio puede tener una ruta distinta, por eso se recomienda usar la ruta calculada por PowerShell, no una ruta literal como `"$HOME\Desktop\..."`.
 
 ### Checklist antes de entregar
 - [ ] El archivo incluye `NOMBRE_APELLIDOS` y `NUM_CUENTA` correctos.
