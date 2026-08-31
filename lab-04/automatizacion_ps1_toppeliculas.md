@@ -2,7 +2,7 @@
 
 **Licenciatura en Informática Administrativa · 3.er semestre**
 **Unidad de Aprendizaje: Sistemas Operativos**
-**Duración: 35 minutos · Modalidad: laboratorio o casa · Sistema: Windows 10 / 11 (español o inglés)**
+**Duración: 35 minutos · Modalidad: laboratorio· Sistema: Windows 10 / 11 (español o inglés)**
 
 ---
 
