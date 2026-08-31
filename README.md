@@ -2,11 +2,6 @@
 
 Repositorio con las prácticas de laboratorio del curso. Cada práctica vive en su propia carpeta, con su propio `README.md` con instrucciones específicas.
 
-## Prácticas disponibles
-
-| # | Práctica | Herramienta |
-|---|----------|-------------|
-| 01 | [Exploración del Sistema Operativo Windows](./practica-01-exploracion-windows/) | PowerShell |
 
 ## Cómo usar este repositorio
 1. Entra a la carpeta de la práctica que te corresponda.
