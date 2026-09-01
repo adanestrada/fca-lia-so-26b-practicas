@@ -115,8 +115,7 @@ $Proyecto = Join-Path -Path $Escritorio -ChildPath ("P04_TopPeliculas_{0}" -f $C
 if (-not (Test-Path -LiteralPath $Proyecto)) {
     New-Item -ItemType Directory -Path $Proyecto -Force | Out-Null
     Write-Host "Carpeta creada: $Proyecto" -ForegroundColor Green
-}
-else {
+} else {
     Write-Host "La carpeta ya existia, se reutiliza: $Proyecto" -ForegroundColor Yellow
 }
 ```
