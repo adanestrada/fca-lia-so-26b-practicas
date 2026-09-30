@@ -120,15 +120,17 @@ Imagen oficial que usaremos: **nginx** → <https://hub.docker.com/_/nginx>
 
 1. En Docker Desktop, haz clic en la **barra de búsqueda** de la parte superior (o presiona `Ctrl + K`).
 2. Escribe **`nginx`**.
-3. En los resultados, elige el que se llama exactamente **nginx** y tiene la insignia **Docker Official Image**. No elijas variantes de otros autores.
-4. Verifica que la etiqueta (*tag*) seleccionada sea **`latest`**.
+3. En los resultados, elige el que se llama exactamente **nginx** y tiene la insignia **Docker Official Image**. No elijas variantes de otros autores (`nginx/nginx-…`, `bitnami…`, `ubuntu/nginx`, etc.).
+4. Deja la etiqueta (*tag*) que aparece **seleccionada por defecto** en el menú **Tag** (por ejemplo `stable-alpine3.24-perl`); no hace falta cambiarla. **Anota cuál es**, porque la usarás en el Paso 4.
+
+   > ℹ️ Una imagen oficial se publica en muchas **variantes** (versiones y bases distintas, como *alpine* o *perl*). Para esta práctica cualquiera funciona: todas incluyen el servidor web nginx.
 5. Presiona **Pull**. Espera a que termine la descarga.
 
-   > ⏳ **Ten paciencia:** la búsqueda puede tardar unos segundos en mostrar resultados, porque consulta Docker Hub por internet. La descarga de nginx (unos 70 MB) tarda **de 1 a 5 minutos** según la red; si tu internet en casa es lento o hay otras personas usándolo al mismo tiempo (videos, juegos, descargas), puede tardar más. **No presiones Pull otra vez**: la barra de progreso o el ícono girando indican que sigue descargando. Cuando termine, la imagen aparece en **Images** (si no la ves, cambia de vista y regresa para refrescar la lista).
-6. En el menú izquierdo abre **Images**. Debe aparecer `nginx` con tag `latest`, su **Image ID**, fecha y tamaño.
+   > ⏳ **Ten paciencia:** la búsqueda puede tardar unos segundos en mostrar resultados, porque consulta Docker Hub por internet. La descarga (decenas de MB, según la variante) tarda **de 1 a 5 minutos** según la red; si tu internet en casa es lento o hay otras personas usándolo al mismo tiempo (videos, juegos, descargas), puede tardar más. **No presiones Pull otra vez**: la barra de progreso o el ícono girando indican que sigue descargando. Cuando termine, la imagen aparece en **Images** (si no la ves, cambia de vista y regresa para refrescar la lista).
+6. En el menú izquierdo abre **Images**. Debe aparecer `nginx` con la **etiqueta que descargaste**, su **Image ID**, fecha y tamaño.
 
 > ### 📸 CAPTURA C2 — Imagen descargada
-> Vista **Images** donde se lea claramente **nginx** · **latest** y su tamaño.
+> Vista **Images** donde se lea claramente **nginx**, su **etiqueta** y su tamaño.
 
 ---
 
@@ -152,19 +154,25 @@ Imagen oficial que usaremos: **nginx** → <https://hub.docker.com/_/nginx>
 Docker Desktop **no tiene botón para renombrar** imágenes. En Docker, «renombrar» significa **crear una nueva etiqueta (tag)** que apunta a la misma imagen. Lo haremos con un solo comando.
 
 1. Abre la **terminal integrada** de Docker Desktop (botón **Terminal**, abajo a la derecha) o PowerShell.
-2. Escribe el comando cambiando `2412345` por **tu número de cuenta**:
+2. Escribe el comando cambiando `ETIQUETA` por la **etiqueta que descargaste** (la que ves en la columna *Tag* de **Images**) y `2412345` por **tu número de cuenta**:
 
    ```powershell
-   docker tag nginx:latest practica6-web:2412345
+   docker tag nginx:ETIQUETA practica6-web:2412345
+   ```
+
+   Por ejemplo, si descargaste `stable-alpine3.24-perl`:
+
+   ```powershell
+   docker tag nginx:stable-alpine3.24-perl practica6-web:2412345
    ```
 
    > El nombre de una imagen debe ir **en minúsculas** y sin espacios.
 
-3. Regresa a **Images** en la GUI. Ahora verás **dos filas**: `nginx:latest` y `practica6-web:<tu_cuenta>`.
+3. Regresa a **Images** en la GUI. Ahora verás **dos filas**: `nginx` con su etiqueta original y `practica6-web:<tu_cuenta>`.
 4. Fíjate en el **Image ID**: ¡es el mismo en las dos! Son dos nombres para el mismo contenido; no se duplicó el espacio en disco.
 
 > ### 📸 CAPTURA C4 — Imagen renombrada
-> Vista **Images** mostrando **`practica6-web:<tu_cuenta>`** junto a **`nginx:latest`** (con el mismo Image ID), y la terminal con el comando **`docker tag`** visible.
+> Vista **Images** mostrando **`practica6-web:<tu_cuenta>`** junto a **`nginx`** con su etiqueta original (con el mismo Image ID), y la terminal con el comando **`docker tag`** visible.
 
 ---
 
@@ -240,7 +248,7 @@ Contenido:
 ### ✅ Lista de verificación antes de entregar
 
 - [ ] C1 muestra *Engine running* **y** la salida de `docker version`.
-- [ ] C2 muestra `nginx` · `latest` en **Images**.
+- [ ] C2 muestra `nginx` y su etiqueta en **Images**.
 - [ ] C3 muestra capas o historial de la imagen.
 - [ ] C4 muestra `practica6-web:<mi_cuenta>` y el comando `docker tag`.
 - [ ] C5 muestra `web-practica6` en **Running** con `8080:80`.
@@ -257,6 +265,7 @@ Contenido:
 | Docker Desktop pide actualizar WSL o no arranca | WSL antiguo | `wsl --update` en PowerShell (Administrador) y reiniciar |
 | Se queda en «Starting the Docker Engine…» | Arranque lento o bloqueado | Espera 2–3 minutos; si sigue, menú de la ballena → **Quit Docker Desktop** y ábrelo de nuevo |
 | `Bind for 0.0.0.0:8080 failed: port is already allocated` | Otro programa usa el puerto 8080 | Elimina el contenedor y vuelve a crearlo con **Host port** `8081`; abre `localhost:8081` |
+| `No such image: nginx:...` al hacer `docker tag` | La etiqueta no coincide con la que descargaste | Copia la etiqueta **exactamente** como aparece en la columna *Tag* de **Images** |
 | `invalid reference format` al hacer `docker tag` | Mayúsculas o espacios en el nombre | Usa solo minúsculas, números y guiones: `practica6-web:2412345` |
 | El navegador sigue mostrando «Welcome to nginx!» | Caché del navegador | `Ctrl + F5` o abre una ventana de incógnito |
 | El comando `echo` no hace nada o marca error | Comillas rotas al pegar | Asegúrate de que el comando empieza con `echo '` y termina con `' > /usr/share/nginx/html/index.html` |
