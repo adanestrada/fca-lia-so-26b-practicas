@@ -46,7 +46,7 @@ flowchart TD
     C2 --> D
     D --> E["Abrir Docker Desktop<br/>y aceptar términos"]
     E --> F["📸 C1: Docker Desktop funcionando<br/>+ docker version"]
-    F --> G["Buscar 'nginx' en la GUI<br/>y hacer Pull"]
+    F --> G["Buscar 'nginx' en la GUI y hacer Pull<br/>con la etiqueta predeterminada"]
     G --> H["📸 C2: Imagen nginx<br/>en la vista Images"]
     H --> I["Abrir el detalle de la imagen<br/>capas, tamaño, historial"]
     I --> J["📸 C3: Detalle de la imagen"]
@@ -131,7 +131,7 @@ sequenceDiagram
 |---|---|
 | **Imagen** | Plantilla de solo lectura con todo lo necesario para ejecutar un programa (aquí: nginx + Linux mínimo). |
 | **Contenedor** | Una instancia en ejecución de una imagen. Tiene su propia capa escribible encima de la imagen. |
-| **Tag (etiqueta)** | El nombre `repositorio:versión` de una imagen, por ejemplo `nginx:latest`. «Renombrar» una imagen = crearle otro tag que apunta al mismo contenido. |
+| **Tag (etiqueta)** | El nombre `repositorio:versión` de una imagen, por ejemplo `nginx:latest` o `nginx:stable-alpine3.24-perl`. «Renombrar» una imagen = crearle otro tag que apunta al mismo contenido. |
 | **Registro** | Almacén de imágenes en internet. El público más usado es Docker Hub. |
 | **Mapeo de puertos** | Regla `host:contenedor` (ej. `8080:80`) que conecta un puerto de tu computadora con uno del contenedor. |
 | **Exec** | Abrir una terminal *dentro* de un contenedor que ya está corriendo. |
@@ -145,7 +145,7 @@ sequenceDiagram
 | # | Momento | Qué debe verse |
 |---|---|---|
 | **C1** | Docker instalado | Docker Desktop abierto con el motor en ejecución y una terminal mostrando `docker version` |
-| **C2** | Imagen descargada | Vista **Images** con `nginx` `latest` en la lista |
+| **C2** | Imagen descargada | Vista **Images** con `nginx` y su etiqueta en la lista |
 | **C3** | Imagen inspeccionada | Detalle de la imagen nginx (capas / historial / tamaño) |
 | **C4** | Imagen renombrada | Lista **Images** con `practica6-web:<tu_cuenta>` y el comando `docker tag` visible |
 | **C5** | Contenedor en ejecución | Vista **Containers** con `web-practica6` en verde y puertos `8080:80` |
