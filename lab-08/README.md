@@ -48,7 +48,6 @@ Al terminar podrás:
 | Windows 10 u 11 (en español o en inglés) | **[WINDOWS.md](WINDOWS.md)** | Windows PowerShell |
 | macOS | **[MACOS.md](MACOS.md)** | Terminal (zsh) |
 | Linux | **[MACOS.md](MACOS.md)**, con la nota del paso 1.2 | Terminal (bash) |
-| Cualquiera, **sin instalar nada**, desde el navegador | **[CODESPACES.md](CODESPACES.md)** con su [README_CODESPACES](README_CODESPACES.md) | Terminal de GitHub Codespaces |
 
 Ambas guías tienen **las mismas secciones, los mismos pasos dentro del contenedor y las mismas evidencias**. Solo cambian los comandos de tu sistema anfitrión.
 
