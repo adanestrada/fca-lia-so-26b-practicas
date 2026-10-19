@@ -15,6 +15,7 @@ Repositorio con las prácticas de laboratorio del curso. Cada práctica vive en 
 | [lab-07](lab-07/README.md) | Sistemas de archivos del anfitrión, Docker y contenedores usando la terminal. |
 | [lab-07-b](lab-07-b/README.md) | Alternativa de la práctica de Docker en GitHub Codespaces. |
 | [lab-08](lab-08/README.md) | Administración de sistemas de archivos y permisos de acceso en un servidor Linux con Docker. |
+| [lab-08b](lab-08b/README.md) | Versión en GitHub Codespaces de la práctica de sistemas de archivos y permisos con Docker, sin instalación local. |
 
 ## Cómo usar este repositorio
 1. Entra a la carpeta de la práctica que te corresponda.
