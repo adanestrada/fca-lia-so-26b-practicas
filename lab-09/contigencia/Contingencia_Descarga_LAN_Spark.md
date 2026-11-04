@@ -45,17 +45,40 @@ flowchart LR
 # PARTE 1 · Profesor: dejar el archivo disponible en la red
 
 > Todos los bloques de esta parte son idempotentes: si los repites no fallan ni duplican nada.
-> **Abre dos ventanas de PowerShell como administrador** (menú Inicio → `PowerShell` → clic derecho → *Ejecutar como administrador*): una para preparar (1.1 a 1.4) y otra **exclusiva** para el servidor (1.5), porque esa ventana se queda ocupada atendiendo descargas.
+> **Se necesitan dos ventanas de PowerShell _como administrador_**: una para preparar (1.1 a 1.4) y otra **exclusiva** para el servidor (1.5), porque esa ventana se queda ocupada atendiendo descargas. Abrir una ventana normal **no basta**: Windows rechaza con `Access is denied` tanto la regla del firewall (1.3) como el encendido del servidor (1.5). El paso 1.0 te dice si tu ventana es de administrador y, si no, abre una.
 
 ```mermaid
 flowchart TD
-    A["1.1 Variables y archivo<br/>(descargar si falta)"] --> B["1.2 Calcular huella SHA-256<br/>y guardarla en un .sha256"]
+    Z["1.0 Confirmar que la ventana<br/>es de administrador"] --> A["1.1 Variables y archivo<br/>(descargar si falta)"] --> B["1.2 Calcular huella SHA-256<br/>y guardarla en un .sha256"]
     B --> C["1.3 Abrir el puerto 8080<br/>en el firewall de Windows"]
     C --> D["1.4 Averiguar tu IP"]
     D --> E["1.5 Encender el servidor<br/>(ventana exclusiva)"]
     E --> F["Proyectar IP y puerto<br/>en el pizarrón"]
     F --> G["1.6 Apagar y limpiar<br/>al terminar el Paso 3"]
 ```
+
+## 1.0 Confirmar que esta ventana es de administrador
+
+**Por qué:** crear reglas del firewall y escuchar peticiones desde la red son acciones **privilegiadas**: el sistema operativo las reserva a un administrador para que un programa cualquiera no pueda abrir puertas por su cuenta. Es el mismo principio de «mínimo privilegio» que se ve en la materia.
+
+```powershell
+# Preguntar a Windows si el usuario de esta ventana tiene rol de administrador (devuelve True o False)
+$ES_ADMIN = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+# Mostrar el resultado
+if ($ES_ADMIN) { Write-Host "OK: esta ventana ES de administrador." } else { Write-Host "ATENCION: esta ventana NO es de administrador. Ejecuta el bloque siguiente." }
+```
+
+Si dijo **`NO es de administrador`**, este comando abre una **ventana nueva** de PowerShell con permisos elevados (Windows mostrará un aviso de *Control de cuentas de usuario*: acepta con **Sí**). Cierra la ventana anterior y trabaja en la nueva, empezando de nuevo en el bloque 1.1.
+
+```powershell
+# Abrir PowerShell como administrador (-Verb RunAs pide la elevación). En PowerShell 7 cambia "powershell" por "pwsh"
+Start-Process -FilePath "powershell" -Verb RunAs
+```
+
+La ventana elevada se reconoce porque el título dice **Administrador:** (o *Administrator:*). Repite el primer bloque de este paso en ella: debe decir `OK`.
+
+> Si en el equipo del profesor **no** es posible obtener permisos de administrador, esta contingencia **no puede ejecutarse** (ni el firewall ni el servidor funcionan sin ellos). En ese caso, usa un equipo del que sí tengas permisos.
 
 ## 1.1 Variables y archivo de Spark
 
@@ -139,14 +162,20 @@ $PUERTO = 8080
 # Nombre de la regla del firewall
 $REGLA = "Lab09 Spark LAN"
 
+# ¿Esta ventana es de administrador? (si es False, la regla no se puede crear: vuelve al paso 1.0)
+$ES_ADMIN = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+# Avisar con claridad si falta el permiso, en lugar del error "Access is denied"
+if (-not $ES_ADMIN) { Write-Host "ALTO: abre PowerShell como administrador (paso 1.0) y repite este bloque." }
+
 # ¿Ya existe la regla? (SilentlyContinue: si no existe, no marca error)
 $reglaExiste = Get-NetFirewallRule -DisplayName $REGLA -ErrorAction SilentlyContinue
 
-# Crear la regla solo si no existe; -Profile Any funciona aunque Windows clasifique la red como Pública
-if (-not $reglaExiste) { $null = New-NetFirewallRule -DisplayName $REGLA -Direction Inbound -Protocol TCP -LocalPort $PUERTO -Action Allow -Profile Any }
+# Crear la regla solo si hay permisos y no existe; -Profile Any funciona aunque Windows clasifique la red como Pública
+if ($ES_ADMIN -and (-not $reglaExiste)) { $null = New-NetFirewallRule -DisplayName $REGLA -Direction Inbound -Protocol TCP -LocalPort $PUERTO -Action Allow -Profile Any }
 
-# Confirmar que la regla está activa (Enabled debe decir True)
-Get-NetFirewallRule -DisplayName $REGLA
+# Confirmar que la regla existe y está activa (Enabled debe decir True; si no muestra nada, la regla no se creó)
+Get-NetFirewallRule -DisplayName $REGLA -ErrorAction SilentlyContinue
 ```
 
 ## 1.4 Averiguar la dirección IP de tu computadora
@@ -455,7 +484,7 @@ Test-Path $JDK_ZIP
 
 | Síntoma | Causa probable | Qué hacer |
 |---|---|---|
-| **Profesor:** `Acceso denegado` al hacer `Start()` | La ventana no es de administrador | Cerrar y abrir PowerShell con *Ejecutar como administrador* |
+| **Profesor:** `Access is denied` / `Acceso denegado` al crear la regla del firewall (1.3) o al hacer `Start()` (1.5) | La ventana no es de administrador | Ejecutar el paso 1.0 (abre una ventana elevada) y repetir desde 1.1 |
 | **Profesor:** error de que el puerto está en uso | Otro programa usa el 8080 | Cambiar `$PUERTO` a `8081` en 1.3 y 1.5 y avisar a los alumnos |
 | **Alumno:** `TcpTestSucceeded : False` | IP o puerto mal escritos, servidor apagado o firewall del profesor sin regla | Revisar 2.1; el profesor confirma el paso 1.3 y que el servidor siga encendido |
 | **Alumno:** el comando parece «detenido» | Hay otros alumnos descargando antes | Esperar; el servidor atiende uno a la vez |
