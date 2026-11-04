@@ -1,9 +1,9 @@
 # Lab 09 · Apache Spark en una sola computadora: instalar, configurar y paralelizar por núcleos
 
-**Materia:** Sistemas Operativos · **Carrera:** Licenciatura en Informática Administrativa (3er semestre)
-**Universidad Autónoma del Estado de México (UAEMEX)** · **Duración:** 40 minutos · **Modalidad:** en parejas, en clase, siguiendo al profesor
-**Tema:** Sistemas operativos modernos: el cómputo distribuido, caso Spark (continuación práctica de las sesiones de Spark)
-**Entorno:** Windows 10 u 11 (en español o en inglés) · PowerShell 5.1 o PowerShell 7 · **no requiere permisos de administrador**
+**Materia:** Sistemas Operativos · **Carrera:** Licenciatura en Informática Administrativa (3er semestre). 
+**Universidad Autónoma del Estado de México (UAEMEX)** · **Duración:** 40 minutos · **Modalidad:** en parejas, en clase, siguiendo al profesor. 
+**Tema:** Sistemas operativos modernos: el cómputo distribuido, caso Spark (continuación práctica de las sesiones de Spark). 
+**Entorno:** Windows 10 u 11 (en español o en inglés) · PowerShell 5.1 o PowerShell 7 · **no requiere permisos de administrador**. 
 
 ---
 
